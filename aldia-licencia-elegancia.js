@@ -19,6 +19,7 @@ function dias(f){return Math.round((new Date(f+'T12:00')-new Date(hoy()+'T12:00'
 function money(n){return '₡'+n.toLocaleString('es-CR')}
 function leer(){try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.pagadoHasta)return s}catch(e){}return null}
 function guardar(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+window.__aldiaLicencia={codigoMes:codigoMes,id:CLIENTE_ID,abrir:function(){abierta=true;pintar()}};
 var L=leer();
 if(!L){L={pagadoHasta:sigVence(hoy()),visto:hoy(),pagos:[]};guardar(L)}       // primer mes de regalo
 if(L.visto<hoy()){L.visto=hoy();guardar(L)}
@@ -86,7 +87,6 @@ function pintar(){
   var e=estado(),h='';
   if(e.mal){h='<div class="cov lock"><div class="top">Elegancia Grooming</div>'+hoja(true)+'</div>'}
   else{
-    h+='<button class="fab '+(e.pronto?'aviso':'')+'" data-x="abrir">'+(e.pronto?'⚠️ Pago en '+e.d+' '+(e.d===1?'día':'días'):'💳 Mi suscripción')+'</button>';
     if(e.pronto&&!aviso_off&&!abierta)h+='<div class="ban"><span>Tu suscripción vence '+(e.d===0?'hoy':e.d===1?'mañana':'en '+e.d+' días')+'. Pagá '+money(CONFIG.precio)+' por SINPE al '+esc(CONFIG.sinpe)+'.</span><button data-x="abrir">Ver cómo</button><button data-x="ocultar" aria-label="Ocultar aviso">✕</button></div>';
     if(abierta)h+='<div class="cov" data-x="fondo"><div style="background:var(--bg);min-height:100%"><div class="top">Elegancia Grooming<button data-x="cerrar">Cerrar</button></div>'+hoja(false)+'</div></div>'}
   var prev=document.getElementById('aldia-cod'),val=prev?prev.value:'';
@@ -108,5 +108,5 @@ root.addEventListener('keydown',function(ev){if(ev.key==='Enter'&&ev.target.id==
 function montar(){document.head.appendChild(st);document.body.appendChild(root);pintar();
   setInterval(function(){if(!abierta&&!document.getElementById('aldia-cod')){var b=bloqueada();pintar()}},60000)}
 if(document.body)montar();else document.addEventListener('DOMContentLoaded',montar);
-window.__aldiaLicencia={codigoMes:codigoMes,id:CLIENTE_ID};
+
 })();
